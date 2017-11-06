@@ -252,7 +252,7 @@ fmt.Println(message)
 
     endMsg := "<br> <br> If You Want To Check For Another Country Pls Inform Me, Otherwise GoodBye :))"
 		message = ""
-		resMsg = "Weather in "+city+" is "+Celsius+" C"+clothes+endMsg
+		resMsg = "Weather in <span style='color:red;'>"+city+"</span> is <span style='color:CornflowerBlue;'>"+Celsius+" C </span>"+clothes+endMsg
 		questionMarksCount = 0
 
 		}
