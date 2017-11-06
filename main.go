@@ -173,7 +173,7 @@ func cityCheck(city string, country string) bool {
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
-	if strings.EqualFold(country, "united states of america") {
+	if strings.EqualFold(country, "usa") {
 		country = "united states"
 	}
 	citIsValid := false
