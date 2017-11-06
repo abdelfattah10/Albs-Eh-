@@ -28,7 +28,7 @@ type weatherStruc struct{
 type coutryerror struct {
 	Status float64 `json:"status"`
 }
-/*
+
 //structs for JSON for the city and country validation
 type matchedSubstrings struct {
 	Length float64 `json:"length"`
@@ -58,7 +58,7 @@ type forEachCity struct {
 type cityerror struct {
 	Predictions []forEachCity
 }
-*/
+
 //----------------------- Functions -----------------------------
 func FloatToString(input_num float64) string {
 
@@ -136,11 +136,16 @@ func countryCheck(country string) bool {
 		}
 		return false
 }
-/*
+
 func cityCheck(city string, country string) bool {
 	cityname := city
 
-	cityurl := "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + cityname + "&types=(cities)&key=" + GoogleAPIkey
+	var finalcityname string
+ 	words := strings.Fields(cityname)
+ 	for i := 0; i < len(words); i++ {
+ 		finalcityname = finalcityname + words[i]
+ 	}
+ 	cityurl := "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=" + finalcityname + "&types=(cities)&key=" + GoogleAPIkey
 
 	cityerrorObj := cityerror{}
 
@@ -179,7 +184,7 @@ func cityCheck(city string, country string) bool {
 	}
 	return citIsValid
 	}
-*/
+
 
  func chatbotProcess(session chatbot.Session, message string) (string, error) {
  	if strings.EqualFold(message, "chatbot") {
@@ -204,7 +209,17 @@ fmt.Println(message)
 
 	if questionMarksCount == 1 {
 		session["Country"] = message
+		country := session["Country"].(string)
+
+		countryCheck := countryCheck(country)
+
+		if countryCheck {
 		resMsg = " ,Great! Now What Is Your City ?"
+			} else {
+				resMsg = "Invalid Country, Pls try again"
+				message = ""
+				questionMarksCount = 0
+			 }
 	} else {
 		session["City"] = message
 
@@ -214,11 +229,10 @@ fmt.Println(message)
 		CelsiusF := weather(country,city)
 		Celsius  := FloatToString(CelsiusF)
 
-		countryCheck := countryCheck(country)
-		//cityCheck    := cityCheck(city,country)
+		cityCheck := cityCheck(city,country)
 
-		if CelsiusF == -273.15 || !countryCheck /*|| !cityCheck */ {
-		resMsg = "Invalid Country or City, Pls try again"
+		if CelsiusF == -273.15 || !cityCheck {
+		resMsg = "City Not Found, Pls Enter Your Country Again"
 		message = ""
 		questionMarksCount = 0
 		} else {
