@@ -94,6 +94,41 @@ func weather(country string, city string) float64 {
 
  Celsius := weatherObj.Main.Temp - 273.15
  fmt.Println(Celsius)
+  if Celsius == -273.15 {
+		CelsiusF := weather2(city)
+		return CelsiusF
+	}
+ return Celsius
+}
+func weather2(city string) float64 {
+	weatherObj := weatherStruc{}
+	url := "http://api.openweathermap.org/data/2.5/weather?q="+ city +"&APPID=" + APIkey
+	spaceClient := http.Client{
+		Timeout: time.Second * 10, // Maximum of 10 secs
+}
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+			log.Fatal(err)
+	}
+	req.Header.Set("User-Agent", "Weather-API")
+
+	res, getErr := spaceClient.Do(req)
+	if getErr != nil {
+			log.Fatal(getErr)
+	}
+
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+			log.Fatal(readErr)
+	}
+
+	jsonErr := json.Unmarshal(body, &weatherObj)
+	if jsonErr != nil {
+			log.Fatal(jsonErr)
+	}
+
+ Celsius := weatherObj.Main.Temp - 273.15
+ fmt.Println(Celsius)
  return Celsius
 }
 
@@ -245,7 +280,7 @@ fmt.Println(message)
 		case CelsiusF >= 24 && CelsiusF  < 31: clothes = ", It seems to be hot today we recommend you to wear light clothes like T-shirts and sweatpants would be nice also do not forget your hat and sunglasses"
 		case CelsiusF >= 16 && CelsiusF  < 24: clothes = ", It seems to be clear comfortable today we recommend you to wear light clothes like T-shirts or shirts and jeans"
 		case CelsiusF >= 9  && CelsiusF  < 16: clothes = ", It is seems to be cold today we recommend you to wear heavy clothes like pull over or hoodies and jeans"
-		case CelsiusF >= -5 && CelsiusF  < 9: clothes = ", It is very cold outside we recommend you to wear heavy clothes like jackets and denim jeans also do not forget your scarfs and icecap"
+		case CelsiusF >= -5 && CelsiusF  < 9: clothes = ", It is very cold outside we recommend you to wear heavy clothes like jackets and denim jeans also do not forget your scarf and icecap"
 		case CelsiusF <  -5 : clothes = ", It is freezing outside you better stay at home"
 
 		}
